@@ -1,3 +1,4 @@
+import ThemeProvider from '@/components/theme-provider';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Comfortaa } from 'next/font/google';
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang='en'>
-      <body className={comfortaa.className}>{children}</body>
+      <body className={comfortaa.className}>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 };
