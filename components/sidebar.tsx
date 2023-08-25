@@ -46,7 +46,7 @@ const Sidebar = () => {
   );
 
   return (
-    <div className='h-full w-[50px] rounded-lg secondary flex flex-col'>
+    <div className='h-full w-[50px] rounded-lg border border-gray-700 flex flex-col'>
       {items.map(item => (
         <SidebarItem key={item.label} {...item} />
       ))}
