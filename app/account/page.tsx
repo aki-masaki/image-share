@@ -1,13 +1,6 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
-import { getCookie } from 'cookies-next';
-import { login } from './actions';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useState } from 'react';
-import * as zod from 'zod';
-import { Form, useForm, FormProvider, useFormContext } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@/components/ui/button';
 import {
   FormControl,
   FormField,
@@ -15,36 +8,61 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getCookie, setCookie } from 'cookies-next';
+import { useEffect, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import * as zod from 'zod';
+import { signup } from './actions';
 
-const signupFormSchema = zod.object({
+export const signupFormSchema = zod.object({
   username: zod.string().min(3).max(50),
   password: zod.string().min(8).max(50)
 });
 
-const loginFormSchema = zod.object({
+export const loginFormSchema = zod.object({
   username: zod.string().min(3).max(50),
   password: zod.string().min(8).max(50)
 });
 
 const AccountPage = () => {
-  const userId = getCookie('user-id');
+  const [username, setUsername] = useState(getCookie('username'));
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => setLoading(username?.trim() === ''), [username]);
 
   const [method, setMethod] = useState<'login' | 'signup'>('signup');
+
+  const [usernameError, setUsernameError] = useState('');
+  const [pending, setPending] = useState(false);
 
   const signupForm = useForm<zod.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema)
   });
 
   const loginForm = useForm<zod.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(signupFormSchema)
+    resolver: zodResolver(loginFormSchema)
   });
 
-  const onSignup = (data: zod.infer<typeof signupFormSchema>) => {};
-  const onLogin = (data: zod.infer<typeof signupFormSchema>) => {};
+  const onSignup = async (data: zod.infer<typeof signupFormSchema>) => {
+    const response = (await signup(data)) as string;
 
-  return userId ? (
-    <div>{userId}</div>
+    // Success
+    if (response.trim() === '') {
+      setCookie('username', data.username);
+      setUsername(data.username);
+    } else setUsernameError(response);
+  };
+
+  const onLogin = (data: zod.infer<typeof loginFormSchema>) => {};
+
+  return loading ? (
+    <div className='p-4'>Loading...</div>
+  ) : username ? (
+    <div className='p-4'>
+      <span className='text-neutral-500'> Logged in as</span> {username}
+    </div>
   ) : (
     <div
       className='
@@ -70,7 +88,7 @@ const AccountPage = () => {
                   <FormControl>
                     <Input placeholder='Username' {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage>{usernameError}</FormMessage>
                 </FormItem>
               )}
             />
@@ -89,7 +107,7 @@ const AccountPage = () => {
               )}
             />
 
-            <Button className='w-full' type='submit'>
+            <Button className='w-full' type='submit' disabled={pending}>
               Submit
             </Button>
 
@@ -139,7 +157,7 @@ const AccountPage = () => {
               )}
             />
 
-            <Button className='w-full' type='submit'>
+            <Button className='w-full' type='submit' disabled={pending}>
               Submit
             </Button>
 

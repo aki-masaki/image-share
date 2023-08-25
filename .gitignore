@@ -35,3 +35,12 @@ yarn-error.log*
 next-env.d.ts
 
 package-lock.json
+
+.env
+
+prisma/dev.db
+prisma/dev.db-journal
+
+# History of migrations is not needed.
+# Can be generated again with `npx prisma migrate dev`
+prisma/migrations
