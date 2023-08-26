@@ -46,4 +46,4 @@ prisma/dev.db-journal
 prisma/migrations
 
 # Image Storage
-storage
+public/storage

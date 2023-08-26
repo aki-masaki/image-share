@@ -29,7 +29,7 @@ export const POST = async (req: NextRequest) => {
 
   try {
     await writeFile(
-      `./storage/${id}.jpeg`,
+      `./public/storage/${id}.jpeg`,
       Buffer.from(await file.arrayBuffer())
     );
   } catch (e) {
