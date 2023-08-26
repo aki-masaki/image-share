@@ -20,7 +20,7 @@ import * as zod from 'zod';
 export const formSchema = zod.object({
   title: zod.string().max(50),
   description: zod.string().max(200).optional(),
-  tags: zod.string().max(50).optional(),
+  tags: zod.string().max(50),
   file: zod.any()
 });
 
@@ -106,7 +106,7 @@ const UploadPage = () => {
             name='tags'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tags (optional)</FormLabel>
+                <FormLabel>Tags</FormLabel>
                 <FormControl>
                   <Input placeholder='Tags (separate by ,)' {...field} />
                 </FormControl>

@@ -22,27 +22,30 @@ const ImageContainer: React.FC<ImageContainerProps> = ({ imageId }) => {
   }, [imageId]);
 
   return (
-    <div className='relative w-[300px] rounded-lg overflow-hidden border border-gray-700 flex flex-col flex-none h-fit'>
-      <Link href={`/view/${imageId}`}>
-        <img className='w-full' src={`/storage/${imageId}.jpeg`} alt='image' />
+    <div className='relative w-[250px] h-fit rounded-lg overflow-hidden border border-gray-700 flex flex-col flex-none'>
+      <Link
+        href={`/view/${imageId}`}
+        className='flex justify-center object-contain border-b border-b-gray-700 h-[150px]'>
+        <img src={`/storage/${imageId}.jpeg`} alt='image' />
       </Link>
 
       {image ? (
         <div className='w-full flex flex-col p-4'>
           <span>{image?.title}</span>
-          <span className='text-neutral-500'>{image?.User?.username}</span>
+          <span className='text-neutral-500'>@{image?.User?.username}</span>
           <div className='flex gap-4 w-full mt-4'>
-            {image?.tags
-              .trim()
-              .split(',')
-              .filter(tag => !!tag && tag.trim() !== '')
-              .map((tag, i) => (
-                <div
-                  key={i}
-                  className='border border-gray-700 p-2 rounded-lg text-sm flex-grow-0'>
-                  {tag}
-                </div>
-              ))}
+            {image?.tags.trim() !== '' &&
+              image?.tags
+                .trim()
+                .split(',')
+                .filter(tag => !!tag && tag.trim() !== '')
+                .map((tag, i) => (
+                  <div
+                    key={i}
+                    className='border border-gray-700 p-2 rounded-lg text-sm flex-grow-0'>
+                    {tag}
+                  </div>
+                ))}
           </div>
         </div>
       ) : (

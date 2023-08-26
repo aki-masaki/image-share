@@ -1,9 +1,9 @@
+import Sidebar from '@/components/sidebar';
 import ThemeProvider from '@/components/theme-provider';
-import './globals.css';
 import type { Metadata } from 'next';
 import { Comfortaa } from 'next/font/google';
-import Sidebar from '@/components/sidebar';
 import { twMerge } from 'tailwind-merge';
+import './globals.css';
 
 const comfortaa = Comfortaa({ subsets: ['latin'] });
 
@@ -22,6 +22,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         flex
         w-full
         h-full
+        overflow-hidden
       `,
           comfortaa.className
         )}>
