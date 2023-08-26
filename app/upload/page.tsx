@@ -47,7 +47,7 @@ const UploadPage = () => {
     for (let i = 0; i < keys.length; i++) formData.append(keys[i], values[i]);
 
     formData.set('file', file);
-    formData.append('userName', getCookie('username') as string);
+    formData.append('username', getCookie('username') as string);
 
     await fetch('api/upload', {
       method: 'POST',

@@ -14,13 +14,23 @@ model User {
   username String  @id
   password String
   images   Image[]
+  likes    Like[]
 }
 
 model Image {
-  id          String @id
-  title       String
-  description String
-  tags        String
-  userName    String
-  User        User?  @relation(fields: [userName], references: [username], onUpdate: Cascade, onDelete: Cascade)
+  id           String @id
+  title        String
+  description  String
+  tags         String
+  userUsername String
+  User         User?  @relation(fields: [userUsername], references: [username])
+  likes        Like[]
+}
+
+model Like {
+  id           Int     @id @default(autoincrement())
+  Image        Image?  @relation(fields: [imageId], references: [id])
+  imageId      String?
+  User         User?   @relation(fields: [userUsername], references: [username])
+  userUsername String?
 }

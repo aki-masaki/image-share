@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { getImageById } from '@/app/actions';
+import { getImageById, toggleLike } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
-import { BiHeart } from 'react-icons/bi';
+import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 
 interface ViewImagePageProps {
   params: {
@@ -14,6 +15,11 @@ interface ViewImagePageProps {
 }
 
 const ViewImagePage = ({ params }: ViewImagePageProps) => {
+  const username = getCookie('username') as string;
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState<number>();
+
   const { slug: imageId } = params;
 
   const [image, setImage] =
@@ -21,9 +27,19 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
 
   useEffect(() => {
     (async () => {
-      setImage(await getImageById(imageId));
+      const response = await getImageById(imageId);
+
+      setImage(response);
+
+      setIsLiked(
+        !!response?.likes.find(
+          like => like.imageId === imageId && like.userUsername === username
+        )
+      );
+
+      setLikes(image?.likes.length);
     })();
-  }, [imageId]);
+  }, [imageId, image?.likes.length, username]);
 
   return (
     <div className='h-full flex-grow pl-4 flex justify-evenly gap-4'>
@@ -48,9 +64,23 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
                 <div>
                   <Button
                     variant='outline'
-                    className='space-x-2 flex justify-center items-center'>
-                    <span>2</span>
-                    <BiHeart size={20} />
+                    className='space-x-2 flex justify-center items-center'
+                    onClick={async () => {
+                      setIsLiked(prev => !prev);
+                      setLikes(prev => (prev || 0) + (isLiked ? -1 : 1));
+
+                      await toggleLike({
+                        imageId,
+                        username: username,
+                        value: isLiked
+                      });
+                    }}>
+                    <span>{likes}</span>
+                    {isLiked ? (
+                      <BiSolidHeart size={20} />
+                    ) : (
+                      <BiHeart size={20} />
+                    )}
                   </Button>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { getImageById } from '@/app/actions';
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { BiHeart } from 'react-icons/bi';
 import { Skeleton } from './ui/skeleton';
 
 interface ImageContainerProps {
@@ -31,8 +32,18 @@ const ImageContainer: React.FC<ImageContainerProps> = ({ imageId }) => {
 
       {image ? (
         <div className='w-full flex flex-col p-4'>
-          <span>{image?.title}</span>
-          <span className='text-neutral-500'>@{image?.User?.username}</span>
+          <div className='flex justify-between'>
+            <div className='flex flex-col'>
+              <span>{image?.title}</span>
+              <span className='text-neutral-500'>@{image?.User?.username}</span>
+            </div>
+
+            <div className='flex items-center space-x-2'>
+              <span>{image.likes.length}</span>
+              <BiHeart size={20} />
+            </div>
+          </div>
+
           <div className='flex gap-4 w-full mt-4'>
             {image?.tags.trim() !== '' &&
               image?.tags
