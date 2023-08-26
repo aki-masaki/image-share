@@ -44,3 +44,6 @@ prisma/dev.db-journal
 # History of migrations is not needed.
 # Can be generated again with `npx prisma migrate dev`
 prisma/migrations
+
+# Image Storage
+storage

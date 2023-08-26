@@ -11,6 +11,16 @@ datasource db {
 }
 
 model User {
-  username String @id
+  username String  @id
   password String
+  images   Image[]
+}
+
+model Image {
+  id          String @id
+  title       String
+  description String
+  tags        String
+  userName    String
+  User        User?  @relation(fields: [userName], references: [username], onUpdate: Cascade, onDelete: Cascade)
 }
