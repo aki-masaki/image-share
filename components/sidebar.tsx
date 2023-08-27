@@ -2,8 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
+import { FaBookmark, FaDice, FaHome, FaPlus, FaUser } from 'react-icons/fa';
 import SidebarItem, { SidebarItemProps } from './sidebar-item';
-import { FaHome, FaDice, FaBookmark, FaPlus, FaUser } from 'react-icons/fa';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -24,8 +24,8 @@ const Sidebar = () => {
       },
       {
         icon: FaBookmark,
-        label: 'Bookmarks',
-        href: '/bookmarks',
+        label: 'Collections',
+        href: '/collections',
         pathname
       },
       {

@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db';
+import { randomBytes } from 'crypto';
 
 export const getImages = async () => {
   return await prisma.image.findMany({
@@ -51,4 +52,39 @@ export const toggleLike = async ({
         userUsername: username
       }
     });
+};
+
+export const getCollections = async (userUsername: string) => {
+  return await prisma.collection.findMany({
+    where: {
+      userUsername
+    }
+  });
+};
+
+export const createCollection = async ({
+  title,
+  userUsername
+}: {
+  title: string;
+  userUsername: string;
+}) => {
+  await prisma.collection.create({
+    data: {
+      id: randomBytes(16).toString('hex'),
+      title,
+      userUsername
+    }
+  });
+};
+
+export const getCollectionById = async ({ id }: { id: string }) => {
+  return await prisma.collection.findUnique({
+    where: {
+      id
+    },
+    include: {
+      images: true
+    }
+  });
 };
