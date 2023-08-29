@@ -85,7 +85,7 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
                 </div>
               </div>
 
-              <p>{image.description ?? 'No description'}</p>
+              {image.description && <p>{image.description}</p>}
             </div>
           </>
         ) : (

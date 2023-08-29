@@ -3,10 +3,19 @@
 import prisma from '@/lib/db';
 import { randomBytes } from 'crypto';
 
-export const getImages = async () => {
+export const getImageIds = async () => {
   return await prisma.image.findMany({
     select: {
       id: true
+    }
+  });
+};
+
+export const getImages = async () => {
+  return await prisma.image.findMany({
+    include: {
+      likes: true,
+      User: true
     }
   });
 };
@@ -87,4 +96,8 @@ export const getCollectionById = async ({ id }: { id: string }) => {
       images: true
     }
   });
+};
+
+export const getUsers = async () => {
+  return await prisma.user.findMany();
 };
