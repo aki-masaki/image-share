@@ -1,12 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { getImageById, toggleLike } from '@/app/actions';
+import {
+  getCollections,
+  getImageById,
+  toggleImageSave,
+  toggleLike
+} from '@/app/actions';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
+import { FaBookmark } from 'react-icons/fa';
 
 interface ViewImagePageProps {
   params: {
@@ -19,6 +32,8 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
 
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState<number>();
+  const [collections, setCollections] =
+    useState<Awaited<ReturnType<typeof getCollections>>>();
 
   const { slug: imageId } = params;
 
@@ -27,12 +42,12 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
 
   useEffect(() => {
     (async () => {
-      const response = await getImageById(imageId);
+      const imageResponse = await getImageById(imageId);
 
-      setImage(response);
+      setImage(imageResponse);
 
       setIsLiked(
-        !!response?.likes.find(
+        !!imageResponse?.likes.find(
           like => like.imageId === imageId && like.userUsername === username
         )
       );
@@ -61,7 +76,7 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
                   <h2 className='text-neutral-500'>@{image.User?.username}</h2>
                 </div>
 
-                <div>
+                <div className='flex gap-2'>
                   <Button
                     variant='outline'
                     className='space-x-2 flex justify-center items-center'
@@ -71,8 +86,7 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
 
                       await toggleLike({
                         imageId,
-                        username: username,
-                        value: isLiked
+                        username: username
                       });
                     }}>
                     <span>{likes}</span>
@@ -82,6 +96,68 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
                       <BiHeart size={20} />
                     )}
                   </Button>
+
+                  {username && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant='outline'
+                          className='space-x-2 flex justify-center items-center'
+                          onClick={async () => {
+                            const collectionsResponse = await getCollections(
+                              username
+                            );
+
+                            setCollections(collectionsResponse);
+                          }}>
+                          <span>Save</span>
+                          <FaBookmark />
+                        </Button>
+                      </DialogTrigger>
+
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>
+                            Where do you want to save the image?
+                          </DialogTitle>
+
+                          <div className='space-y-2'>
+                            {collections?.map(collection => (
+                              <Button
+                                key={collection.id}
+                                variant='outline'
+                                className='w-full h-[60px] p-2 flex flex-col gap-2 items-start'
+                                onClick={async () => {
+                                  await toggleImageSave({
+                                    collectionId: collection.id,
+                                    imageId
+                                  });
+
+                                  const collectionsResponse =
+                                    await getCollections(username);
+
+                                  setCollections(collectionsResponse);
+                                }}>
+                                <span>{collection.title}</span>
+                                {collection &&
+                                !!collection.images.find(
+                                  image => image.imageId === imageId
+                                ) ? (
+                                  <span className='text-neutral-500'>
+                                    Image will be removed.
+                                  </span>
+                                ) : (
+                                  <span className='text-neutral-500'>
+                                    Image will be added.
+                                  </span>
+                                )}
+                              </Button>
+                            ))}
+                          </div>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
               </div>
 
