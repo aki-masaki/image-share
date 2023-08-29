@@ -21,7 +21,7 @@ model User {
 model Image {
   id               String            @id
   title            String
-  description      String
+  description      String            @default("")
   tags             String
   userUsername     String
   User             User?             @relation(fields: [userUsername], references: [username])
