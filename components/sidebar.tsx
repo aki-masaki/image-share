@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { FaBookmark, FaDice, FaHome, FaPlus, FaUser } from 'react-icons/fa';
+import { FaBookmark, FaHome, FaPlus, FaSearch, FaUser } from 'react-icons/fa';
 import SidebarItem, { SidebarItemProps } from './sidebar-item';
 
 const Sidebar = () => {
@@ -17,9 +17,9 @@ const Sidebar = () => {
         pathname
       },
       {
-        icon: FaDice,
-        label: 'Random',
-        href: '/random',
+        icon: FaSearch,
+        label: 'search',
+        href: '/search',
         pathname
       },
       {

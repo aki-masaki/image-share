@@ -8,45 +8,49 @@ import { useEffect, useState } from 'react';
 import { BiHeart } from 'react-icons/bi';
 import { Skeleton } from './ui/skeleton';
 
+type Image = Awaited<ReturnType<typeof getImageById>>;
+
 interface ImageContainerProps {
-  imageId: string;
+  imageId?: string;
+  image?: Image;
 }
 
-const ImageContainer: React.FC<ImageContainerProps> = ({ imageId }) => {
-  const [image, setImage] =
-    useState<Awaited<ReturnType<typeof getImageById>>>();
+const ImageContainer: React.FC<ImageContainerProps> = ({ imageId, image }) => {
+  const [finalImage, setFinalImage] = useState<Image | undefined>(image);
 
   useEffect(() => {
     (async () => {
-      setImage(await getImageById(imageId));
+      if (imageId) setFinalImage(await getImageById(imageId));
     })();
   }, [imageId]);
 
   return (
     <div className='relative w-[250px] h-fit rounded-lg overflow-hidden border border-gray-700 flex flex-col flex-none'>
       <Link
-        href={`/view/${imageId}`}
+        href={`/view/${finalImage?.id}`}
         className='flex justify-center object-contain border-b border-b-gray-700 h-[150px]'>
-        <img src={`/storage/${imageId}.jpeg`} alt='image' />
+        <img src={`/storage/${finalImage?.id}.jpeg`} alt='image' />
       </Link>
 
-      {image ? (
+      {finalImage ? (
         <div className='w-full flex flex-col p-4'>
           <div className='flex justify-between'>
             <div className='flex flex-col'>
-              <span>{image?.title}</span>
-              <span className='text-neutral-500'>@{image?.User?.username}</span>
+              <span>{finalImage?.title}</span>
+              <span className='text-neutral-500'>
+                @{finalImage?.User?.username}
+              </span>
             </div>
 
             <div className='flex items-center space-x-2'>
-              <span>{image.likes.length}</span>
+              <span>{finalImage.likes.length}</span>
               <BiHeart size={20} />
             </div>
           </div>
 
           <div className='flex gap-4 w-full mt-4'>
-            {image?.tags.trim() !== '' &&
-              image?.tags
+            {finalImage?.tags.trim() !== '' &&
+              finalImage?.tags
                 .trim()
                 .split(',')
                 .filter(tag => !!tag && tag.trim() !== '')

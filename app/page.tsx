@@ -3,7 +3,7 @@
 import ImageContainer from '@/components/image-container';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
-import { getImages } from './actions';
+import { getImageIds } from './actions';
 
 const ImageContainerSkeleton = () => {
   return (
@@ -20,7 +20,7 @@ const HomePage = () => {
 
   useEffect(() => {
     (async () => {
-      const images = await getImages();
+      const images = await getImageIds();
 
       setImages(images);
     })();
