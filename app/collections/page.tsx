@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,7 @@ const CollectionsPage = () => {
   }, [username]);
 
   return (
-    <div className='h-full flex-grow'>
+    <div className='flex px-4 gap-4 flex-grow flex-wrap justify-between overflow-y-auto'>
       {username ? (
         collections ? (
           collections.length === 0 ? (
@@ -34,17 +35,27 @@ const CollectionsPage = () => {
               </Button>
             </div>
           ) : (
-            <div className='flex px-4 gap-4 flex-grow flex-wrap justify-between overflow-y-auto'>
-              {collections.map(collection => (
-                <div
-                  key={collection.id}
-                  className='p-4 border border-gray-700 rounded-lg'>
-                  <Link href={`/collections/${collection.id}`}>
-                    {collection.title}
-                  </Link>
+            collections.map(collection => (
+              <Link
+                href={`/collections/${collection.id}`}
+                key={collection.id}
+                className='relative w-[250px] h-fit rounded-lg overflow-hidden border border-gray-700 flex flex-col flex-none'>
+                <div className='w-full flex justify-center items-center object-contain border-b border-b-gray-700 h-[150px]'>
+                  {collection.images.length > 0 ? (
+                    <img
+                      src={`/storage/${collection.images[0]?.imageId}.jpeg`}
+                      alt='image'
+                    />
+                  ) : (
+                    <span>No images</span>
+                  )}
                 </div>
-              ))}
-            </div>
+
+                <div className='w-full p-4'>
+                  <span>{collection?.title}</span>
+                </div>
+              </Link>
+            ))
           )
         ) : (
           <>

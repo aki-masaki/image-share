@@ -46,7 +46,7 @@ model Collection {
 }
 
 model CollectionImage {
-  id           Int         @id
+  id           Int         @id @default(autoincrement())
   Collection   Collection? @relation(fields: [collectionId], references: [id])
   collectionId String?
   Image        Image?      @relation(fields: [imageId], references: [id])

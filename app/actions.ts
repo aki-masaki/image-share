@@ -24,11 +24,9 @@ export const getImageById = async (imageId: string) => {
 };
 
 export const toggleLike = async ({
-  value,
   imageId,
   username
 }: {
-  value: boolean;
   imageId: string;
   username: string;
 }) => {
@@ -58,6 +56,9 @@ export const getCollections = async (userUsername: string) => {
   return await prisma.collection.findMany({
     where: {
       userUsername
+    },
+    include: {
+      images: true
     }
   });
 };
@@ -87,4 +88,33 @@ export const getCollectionById = async ({ id }: { id: string }) => {
       images: true
     }
   });
+};
+
+export const toggleImageSave = async ({
+  collectionId,
+  imageId
+}: {
+  collectionId: string;
+  imageId: string;
+}) => {
+  const collectionImage = await prisma.collectionImage.findFirst({
+    where: {
+      collectionId,
+      imageId
+    }
+  });
+
+  if (collectionImage)
+    await prisma.collectionImage.delete({
+      where: {
+        id: collectionImage.id
+      }
+    });
+  else
+    await prisma.collectionImage.create({
+      data: {
+        imageId,
+        collectionId
+      }
+    });
 };

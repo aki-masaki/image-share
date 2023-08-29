@@ -92,7 +92,7 @@ const AuthForms = ({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder='Password' {...field} />
+                    <Input placeholder='Password' type='password' {...field} />
                   </FormControl>
                   <FormMessage>{passwordError}</FormMessage>
                 </FormItem>
@@ -142,7 +142,7 @@ const AuthForms = ({
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder='Password' {...field} />
+                    <Input placeholder='Password' type='password' {...field} />
                   </FormControl>
                   <FormMessage>{passwordError}</FormMessage>
                 </FormItem>
