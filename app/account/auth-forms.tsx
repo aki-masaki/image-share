@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,7 +18,8 @@ import { login, signup } from './actions';
 
 export const formSchema = zod.object({
   username: zod.string().min(3).max(50),
-  password: zod.string().min(8).max(50)
+  password: zod.string().min(8).max(50),
+  remember: zod.boolean().optional()
 });
 
 const AuthForms = ({
@@ -45,7 +48,10 @@ const AuthForms = ({
 
     // Success
     if (!response) {
-      setCookie('username', data.username);
+      setCookie('username', data.username, {
+        maxAge: data.remember ? 60 * 60 * 24 * 30 : undefined // Live for 30 days
+      });
+
       setUsername(data.username);
     } else {
       if (response.field === 'username') setUsernameError(response.message);
@@ -99,6 +105,27 @@ const AuthForms = ({
               )}
             />
 
+            <FormField
+              control={loginForm.control}
+              name='remember'
+              render={({ field }) => (
+                <FormItem className='flex gap-2 items-center'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className='flex flex-col gap-1 mt-0'>
+                    <FormLabel>Remember me</FormLabel>
+                    <FormDescription>
+                      You will be logged in for 30 days
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+
             <Button className='w-full' type='submit' disabled={pending}>
               Submit
             </Button>
@@ -145,6 +172,27 @@ const AuthForms = ({
                     <Input placeholder='Password' type='password' {...field} />
                   </FormControl>
                   <FormMessage>{passwordError}</FormMessage>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={loginForm.control}
+              name='remember'
+              render={({ field }) => (
+                <FormItem className='flex gap-2 items-center'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className='flex flex-col gap-1 mt-0'>
+                    <FormLabel>Remember me</FormLabel>
+                    <FormDescription>
+                      You will be logged in for 30 days
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />
