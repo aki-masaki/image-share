@@ -27,8 +27,6 @@ const HomePage = () => {
         }
       });
 
-      console.log(images);
-
       setImages(images);
     })();
   }, []);

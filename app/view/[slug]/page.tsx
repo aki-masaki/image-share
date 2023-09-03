@@ -80,7 +80,7 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
       <div className='w-[60%] h-full flex justify-center items-center rounded-lg'>
         <img
           className='max-w-full max-h-full flex-grow'
-          src={`/storage/${imageId}.jpeg`}
+          src={`data:image/png;base64,${image?.imageData}`}
           alt='image'
         />
       </div>

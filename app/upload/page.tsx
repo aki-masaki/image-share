@@ -69,8 +69,6 @@ const UploadPage = () => {
 
     const visibilityArray = ['public', 'link', 'private'];
 
-    debugger;
-
     formData.set('file', file);
     formData.set('visibility', visibilityArray.indexOf(visibility).toString());
     formData.append('username', getCookie('username') as string);

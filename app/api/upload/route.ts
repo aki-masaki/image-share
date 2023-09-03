@@ -1,6 +1,5 @@
 import prisma from '@/lib/db';
 import { randomBytes } from 'crypto';
-import { writeFile } from 'fs/promises';
 import { NextRequest } from 'next/server';
 
 export const POST = async (req: NextRequest) => {
@@ -24,16 +23,8 @@ export const POST = async (req: NextRequest) => {
       description,
       tags,
       userUsername: username,
-      visibility: Number(visibility)
+      visibility: Number(visibility),
+      imageData: Buffer.from(await file.arrayBuffer()).toString('base64')
     }
   });
-
-  try {
-    await writeFile(
-      `./public/storage/${id}.jpeg`,
-      Buffer.from(await file.arrayBuffer())
-    );
-  } catch (e) {
-    console.error(e);
-  }
 };

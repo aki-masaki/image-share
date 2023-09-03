@@ -34,7 +34,10 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
       <Link
         href={`/view/${finalImage?.id}`}
         className='flex justify-center object-contain border-b border-b-gray-700 h-[150px]'>
-        <img src={`/storage/${finalImage?.id}.jpeg`} alt='image' />
+        <img
+          src={`data:image/png;base64,${finalImage?.imageData}`}
+          alt='image'
+        />
       </Link>
 
       {finalImage ? (

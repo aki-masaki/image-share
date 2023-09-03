@@ -31,6 +31,7 @@ model Image {
   // 1 = Link
   // 2 = Private
   visibility       Int               @default(0)
+  imageData        String
 }
 
 model Like {
