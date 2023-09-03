@@ -13,9 +13,14 @@ type Image = Awaited<ReturnType<typeof getImageById>>;
 interface ImageContainerProps {
   imageId?: string;
   image?: Image;
+  className?: string;
 }
 
-const ImageContainer: React.FC<ImageContainerProps> = ({ imageId, image }) => {
+const ImageContainer: React.FC<ImageContainerProps> = ({
+  imageId,
+  image,
+  className
+}) => {
   const [finalImage, setFinalImage] = useState<Image | undefined>(image);
 
   useEffect(() => {

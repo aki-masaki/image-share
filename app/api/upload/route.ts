@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest) => {
 
   formData.forEach((value, key) => (data[key] = value as string | File));
 
-  const { title, description, tags, username } = data as {
+  const { title, description, tags, username, visibility } = data as {
     [key: string]: string;
   };
   let file = data.file as File;
@@ -23,7 +23,8 @@ export const POST = async (req: NextRequest) => {
       title,
       description,
       tags,
-      userUsername: username
+      userUsername: username,
+      visibility: Number(visibility)
     }
   });
 

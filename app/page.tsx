@@ -3,7 +3,7 @@
 import ImageContainer from '@/components/image-container';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
-import { getImageIds } from './actions';
+import { getImages } from './actions';
 
 const ImageContainerSkeleton = () => {
   return (
@@ -20,7 +20,14 @@ const HomePage = () => {
 
   useEffect(() => {
     (async () => {
-      const images = await getImageIds();
+      const images = await getImages({
+        where: {
+          // Select only the public ones
+          visibility: 0
+        }
+      });
+
+      console.log(images);
 
       setImages(images);
     })();
@@ -28,16 +35,18 @@ const HomePage = () => {
 
   const skeletons = [];
 
-  for (let i = 0; i < 7; i++)
+  for (let i = 0; i < 8; i++)
     skeletons.push(<ImageContainerSkeleton key={i} />);
 
   return (
-    <main className='flex px-4 gap-4 flex-grow flex-wrap justify-between overflow-y-auto'>
-      {images
-        ? images.map(image => (
-            <ImageContainer imageId={image.id} key={image.id} />
-          ))
-        : skeletons}
+    <main className='flex flex-grow flex-wrap justify-center items-center overflow-y-auto max-w-[calc(100%-1rem-50px)]'>
+      <div className='flex px-4 gap-8 flex-grow flex-wrap justify-items-start overflow-y-auto w-full h-full'>
+        {images
+          ? images.map(image => (
+              <ImageContainer imageId={image.id} key={image.id} />
+            ))
+          : skeletons}
+      </div>
     </main>
   );
 };

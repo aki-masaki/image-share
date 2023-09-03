@@ -1,22 +1,12 @@
 'use server';
 
 import prisma from '@/lib/db';
+import { Prisma } from '@prisma/client';
 import { randomBytes } from 'crypto';
 
-export const getImageIds = async () => {
+export const getImages = async (options: Prisma.ImageFindManyArgs) => {
   return await prisma.image.findMany({
-    select: {
-      id: true
-    }
-  });
-};
-
-export const getImages = async () => {
-  return await prisma.image.findMany({
-    include: {
-      likes: true,
-      User: true
-    }
+    ...options
   });
 };
 
@@ -126,8 +116,8 @@ export const toggleImageSave = async ({
         collectionId
       }
     });
-}
-  
+};
+
 export const getUsers = async () => {
   return await prisma.user.findMany();
 };

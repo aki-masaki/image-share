@@ -27,6 +27,10 @@ model Image {
   User             User?             @relation(fields: [userUsername], references: [username])
   likes            Like[]
   collectionImages CollectionImage[]
+  // 0 = Public
+  // 1 = Link
+  // 2 = Private
+  visibility       Int               @default(0)
 }
 
 model Like {

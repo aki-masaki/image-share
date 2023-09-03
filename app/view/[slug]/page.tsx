@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getCookie } from 'cookies-next';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiHeart, BiSolidHeart } from 'react-icons/bi';
 import { FaBookmark } from 'react-icons/fa';
@@ -39,24 +41,41 @@ const ViewImagePage = ({ params }: ViewImagePageProps) => {
 
   const [image, setImage] =
     useState<Awaited<ReturnType<typeof getImageById>>>();
+  const [isImagePrivate, setIsImagePrivate] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
       const imageResponse = await getImageById(imageId);
 
-      setImage(imageResponse);
+      if (imageResponse?.visibility === 2) setIsImagePrivate(true);
+      else setImage(imageResponse);
 
       setIsLiked(
-        !!imageResponse?.likes.find(
-          like => like.imageId === imageId && like.userUsername === username
-        )
+        !!imageResponse?.likes.find(like => like.userUsername === username)
       );
 
       setLikes(image?.likes.length);
     })();
   }, [imageId, image?.likes.length, username]);
 
-  return (
+  return !image || isImagePrivate ? (
+    <div
+      className='
+      flex
+      flex-grow
+      items-center
+      justify-center
+      flex-col
+      gap-4'>
+      <h1>Image not found!</h1>
+
+      <Button>
+        <Link href='/account'>Go back</Link>
+      </Button>
+    </div>
+  ) : (
     <div className='h-full flex-grow pl-4 flex justify-evenly gap-4'>
       <div className='w-[60%] h-full flex justify-center items-center rounded-lg'>
         <img
