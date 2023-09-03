@@ -4,9 +4,14 @@ import prisma from '@/lib/db';
 import { Prisma } from '@prisma/client';
 import { randomBytes } from 'crypto';
 
-export const getImages = async (options: Prisma.ImageFindManyArgs) => {
+export const getImages = async (options: Prisma.ImageFindManyArgs = {}) => {
   return await prisma.image.findMany({
-    ...options
+    ...options,
+    include: {
+      likes: true,
+      User: true,
+      collectionImages: true
+    }
   });
 };
 

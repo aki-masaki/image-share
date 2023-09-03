@@ -3,7 +3,12 @@
 import prisma from '@/lib/db';
 import * as crypto from 'crypto';
 import * as zod from 'zod';
-import { formSchema } from './auth-forms';
+
+export const formSchema = zod.object({
+  username: zod.string().min(3).max(50),
+  password: zod.string().min(8).max(50),
+  remember: zod.boolean().optional()
+});
 
 const getHash = (source: string) =>
   crypto.createHash('md5').update(source).digest('hex').toString();

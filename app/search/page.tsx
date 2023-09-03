@@ -11,12 +11,14 @@ interface SearchPageProps {}
 
 type Results<T extends (...args: any) => any> = Awaited<ReturnType<T>>;
 type UserResults = Results<typeof getUsers>;
-type ImageResults = Results<typeof getImages>;
+type ImageResults = Results<typeof getImages> | undefined;
 
 const SearchPage: React.FC<SearchPageProps> = ({}) => {
   const [query, setQuery] = useState('');
   const [userResults, setUserResults] = useState<UserResults>();
-  const [imageResults, setImageResults] = useState<ImageResults>();
+  const [imageResults, setImageResults] = useState<
+    ImageResults | null | undefined
+  >();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -52,7 +54,9 @@ const SearchPage: React.FC<SearchPageProps> = ({}) => {
         images
           // Map the items to an object containing the object itself and a priority
           // which depends on how many proprieties match the search query
-          .map(image => {
+          ?.map((image, i) => {
+            if (!image) return [0, i];
+
             const keys = Object.keys(image),
               values = Object.values(image).filter(
                 // Take only the strings
@@ -68,17 +72,14 @@ const SearchPage: React.FC<SearchPageProps> = ({}) => {
                 priority++;
             }
 
-            return {
-              data: image,
-              priority
-            };
+            return [priority, i];
           })
           // Take only those whose priority is not zero (zero is a falsy value)
-          .filter(item => item.priority)
+          .filter(item => item[0])
           // Sort them based on priority
-          .sort((a, b) => (b.priority || 0) - (a.priority || 0))
+          .sort((a, b) => (b[0] || 0) - (a[0] || 0))
           // Map them to their original object
-          .map(item => item?.data)
+          .map(item => images[item[1]])
       );
     },
     [router]
@@ -106,7 +107,7 @@ const SearchPage: React.FC<SearchPageProps> = ({}) => {
             className='relative w-[250px] h-fit rounded-lg overflow-hidden border border-gray-700 flex flex-col flex-none'></div>
         ))}
         {imageResults?.map(result => (
-          <ImageContainer key={result.id} image={result} />
+          <ImageContainer key={result?.id} image={result} />
         ))}
 
         {/* No result */}

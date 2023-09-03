@@ -14,13 +14,7 @@ import { setCookie } from 'cookies-next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import * as zod from 'zod';
-import { login, signup } from './actions';
-
-export const formSchema = zod.object({
-  username: zod.string().min(3).max(50),
-  password: zod.string().min(8).max(50),
-  remember: zod.boolean().optional()
-});
+import { formSchema, login, signup } from './actions';
 
 const AuthForms = ({
   setUsername

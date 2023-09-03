@@ -24,7 +24,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import * as zod from 'zod';
 
-export const formSchema = zod.object({
+const formSchema = zod.object({
   title: zod.string().max(50),
   description: zod.string().max(200).optional(),
   tags: zod.string().max(50),
